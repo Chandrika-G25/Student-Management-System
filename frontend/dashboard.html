@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Management Dashboard</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            background: #f4f6f9;
+        }
+        
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: #1e293b;
+            color: white;
+            position: fixed;
+        }
+        
+        .sidebar h2 {
+            text-align: center;
+            padding: 20px;
+            border-bottom: 1px solid gray;
+        }
+        
+        .sidebar ul {
+            list-style: none;
+        }
+        
+        .sidebar ul li {
+            padding: 15px 20px;
+            cursor: pointer;
+        }
+        
+        .sidebar ul li:hover {
+            background: #334155;
+        }
+        
+        .sidebar ul li a {
+            text-decoration: none;
+            color: white;
+            display: block;
+        }
+        
+        .main {
+            margin-left: 250px;
+            width: 100%;
+            padding: 20px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .logout-btn {
+            background: red;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card h3 {
+            color: #666;
+        }
+        
+        .card h1 {
+            margin-top: 10px;
+            color: #2563eb;
+        }
+        
+        .search-box {
+            margin: 25px 0;
+        }
+        
+        .search-box input {
+            width: 300px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        
+        table {
+            width: 100%;
+            background: white;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        table th {
+            background: #2563eb;
+            color: white;
+            padding: 12px;
+        }
+        
+        table td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        
+        .action-btn {
+            padding: 6px 10px;
+            border: none;
+            cursor: pointer;
+            color: white;
+            border-radius: 4px;
+        }
+        
+        .edit {
+            background: orange;
+        }
+        
+        .delete {
+            background: red;
+        }
+        
+        .add-btn {
+            background: green;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        @media(max-width:768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            .main {
+                margin-left: 0;
+            }
+            .search-box input {
+                width: 100%;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            SMS <span>ERP</span>
+        </div>
+        <ul>
+            <li><a href="dashboard.html" class="active">Dashboard</a></li>
+            <li><a href="attendance.html">Attendance</a></li>
+            <li><a href="marks.html">Marks</a></li>
+            <li><a href="fees.html">Fees</a></li>
+            <li><a href="reports.html">Reports</a></li>
+        </ul>
+    </div>
+
+    <div class="main">
+
+        <div class="header">
+
+            <h2>
+                Welcome back,
+                <span id="username"></span>
+            </h2>
+
+            <button class="btn btn-danger" onclick="logout()">
+                Logout
+            </button>
+
+        </div>
+
+        <div class="cards">
+
+            <div class="card">
+                <h3>Total Students</h3>
+                <h1 id="studentsCount">0</h1>
+            </div>
+
+            <div class="card">
+                <h3>Total Attendance</h3>
+                <h1 id="attendanceCount">0</h1>
+            </div>
+
+            <div class="card">
+                <h3>System Activities</h3>
+                <h1 id="marksCount">0</h1>
+            </div>
+
+        </div>
+
+        <div class="search-box" style="display: flex; gap: 15px; align-items: center; margin-bottom: 25px;">
+            <input type="text" id="searchInput" placeholder="Search by student name...">
+            <button class="btn btn-primary" onclick="searchStudent()">Search</button>
+        </div>
+
+        <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+            <button class="btn btn-primary" style="background: var(--success);" onclick="openAddModal()">
+                + Add Student
+            </button>
+
+            <button class="btn btn-primary" onclick="loadStudents()">
+                Refresh Data
+            </button>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Student ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Course</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="studentTable">
+                    <!-- Data will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <!-- ADD/EDIT MODAL -->
+    <div id="studentModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle" style="margin-bottom: 25px; color: var(--bg-dark);">Add Student</h2>
+            
+            <form id="studentForm">
+                <input type="hidden" id="editId">
+                
+                <div class="input-field">
+                    <label>Student ID (e.g. STU001)</label>
+                    <input type="text" id="student_id_input" placeholder="Enter Registration ID" required>
+                </div>
+                
+                <div class="input-field">
+                    <label>Full Name</label>
+                    <input type="text" id="full_name" placeholder="Enter Full Name" required>
+                </div>
+                
+                <div class="input-field">
+                    <label>Email</label>
+                    <input type="email" id="email" placeholder="example@college.com" required>
+                </div>
+                
+                <div class="input-field">
+                    <label>Course</label>
+                    <input type="text" id="course" placeholder="e.g. B.Tech Computer Science" required>
+                </div>
+                
+                <div class="input-field">
+                    <label>Phone</label>
+                    <input type="text" id="phone" placeholder="+91 XXXX XXXX XX">
+                </div>
+                
+                <div class="input-field">
+                    <label>Address</label>
+                    <textarea id="address" style="width: 100%; padding: 12px; border-radius: 12px; border: 2px solid #f1f5f9; min-height: 80px;" placeholder="Full Residential Address"></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 15px;">Save Student Record</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="dashboard.js"></script>
+
+</body>
+
+</html>

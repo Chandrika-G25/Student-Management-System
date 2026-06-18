@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Management | SMS ERP</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Using same styles as dashboard -->
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            SMS <span>ERP</span>
+        </div>
+        <ul>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="attendance.html" class="active">Attendance</a></li>
+            <li><a href="marks.html">Marks</a></li>
+            <li><a href="fees.html">Fees</a></li>
+            <li><a href="reports.html">Reports</a></li>
+        </ul>
+    </div>
+
+    <div class="main">
+        <div class="header">
+            <h2>Attendance Management</h2>
+            <div style="display: flex; gap: 15px;">
+                <span id="username" style="font-weight: 600;"></span>
+                <button class="btn btn-danger" onclick="logout()" style="padding: 8px 15px;">Logout</button>
+            </div>
+        </div>
+
+        <div class="card" style="margin-bottom: 30px;">
+            <h3>Mark New Attendance</h3>
+            <form id="attendanceForm" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; align-items: end; margin-top: 15px;">
+                
+                <div class="input-field" style="margin-bottom: 0;">
+                    <label>Select Student</label>
+                    <select id="student_id" required style="width: 100%; padding: 12px; border-radius: 12px; border: 2px solid #f1f5f9; cursor: pointer;">
+                        <option value="">-- Choose Student --</option>
+                    </select>
+                </div>
+
+                <div class="input-field" style="margin-bottom: 0;">
+                    <label>Date</label>
+                    <input type="date" id="attendance_date" required>
+                </div>
+
+                <div class="input-field" style="margin-bottom: 0;">
+                    <label>Status</label>
+                    <select id="status" required style="width: 100%; padding: 12px; border-radius: 12px; border: 2px solid #f1f5f9;">
+                        <option value="Present">Present</option>
+                        <option value="Absent">Absent</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="height: 48px; justify-content: center;">
+                    Save Attendance
+                </button>
+            </form>
+        </div>
+
+        <div class="table-container">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3>Recent Attendance History</h3>
+                <button class="btn btn-primary" style="padding: 8px 15px; background: var(--secondary);" onclick="loadAttendance()">Refresh</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Roll No</th>
+                        <th>Student Name</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="attendanceTable">
+                    <!-- Data will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="attendance.js"></script>
+    <script>
+        // Shared logout logic if needed, but attendance.js will have it
+        document.getElementById("username").innerText = localStorage.getItem("username") || "Admin";
+        
+        function logout() {
+            localStorage.clear();
+            window.location.href = "login.html";
+        }
+    </script>
+</body>
+
+</html>

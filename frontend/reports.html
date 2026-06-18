@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Reports | SMS ERP</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            SMS <span>ERP</span>
+        </div>
+        <ul>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="attendance.html">Attendance</a></li>
+            <li><a href="marks.html">Marks</a></li>
+            <li><a href="fees.html">Fees</a></li>
+            <li><a href="reports.html" class="active">Reports</a></li>
+        </ul>
+    </div>
+
+    <div class="main">
+        <div class="header">
+            <h2>Student Reports</h2>
+            <div style="display: flex; gap: 15px;">
+                <span id="username" style="font-weight: 600;"></span>
+                <button class="btn btn-danger" onclick="logout()" style="padding: 8px 15px;">Logout</button>
+            </div>
+        </div>
+
+        <div class="card" style="margin-bottom: 25px;">
+            <h3>Generate Reports</h3>
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button class="btn" style="background: #dc2626; color: white;" onclick="downloadPDF()">Download PDF</button>
+                <button class="btn" style="background: #16a34a; color: white;" onclick="downloadExcel()">Download Excel</button>
+                <button class="btn btn-primary" onclick="loadStudents()">Refresh Data</button>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <h3>Student Data Preview</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Student ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Course</th>
+                    </tr>
+                </thead>
+                <tbody id="reportTable">
+                    <!-- Data will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <script>
+        const API_URL = "";
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            window.location.href = "login.html";
+        }
+
+        let studentData = [];
+
+        async function loadStudents() {
+            try {
+                const response = await fetch(`${API_URL}/students`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+                if (response.status === 401) {
+                    window.location.href = "login.html";
+                    return;
+                }
+
+                studentData = await response.json();
+
+                let rows = "";
+                studentData.forEach((student, index) => {
+                    rows += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${student.student_id}</td>
+                        <td>${student.full_name}</td>
+                        <td>${student.email}</td>
+                        <td>${student.course}</td>
+                    </tr>
+                    `;
+                });
+
+                document.getElementById("reportTable").innerHTML = rows || '<tr><td colspan="5">No students found</td></tr>';
+            } catch (error) {
+                console.error("Error loading students:", error);
+            }
+        }
+
+        function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Document Title
+            doc.setFontSize(16);
+            doc.text("Student Management Report", 14, 15);
+            doc.setFontSize(10);
+            doc.setTextColor(100);
+            doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 22);
+            
+            // Headers
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "bold");
+            doc.setTextColor(0);
+            
+            doc.text("ID", 14, 32);
+            doc.text("Student ID", 25, 32);
+            doc.text("Name", 55, 32);
+            doc.text("Email", 105, 32);
+            doc.text("Course", 155, 32);
+            
+            doc.setLineWidth(0.5);
+            doc.line(14, 35, 195, 35);
+            
+            doc.setFont("helvetica", "normal");
+            let y = 42;
+            studentData.forEach((student, index) => {
+                if (y > 280) {
+                    doc.addPage();
+                    y = 20;
+                    
+                    // Headers on new page
+                    doc.setFont("helvetica", "bold");
+                    doc.text("ID", 14, y);
+                    doc.text("Student ID", 25, y);
+                    doc.text("Name", 55, y);
+                    doc.text("Email", 105, y);
+                    doc.text("Course", 155, y);
+                    doc.line(14, y + 3, 195, y + 3);
+                    doc.setFont("helvetica", "normal");
+                    y += 10;
+                }
+                
+                doc.text(String(index + 1), 14, y);
+                doc.text(String(student.student_id || ""), 25, y);
+                doc.text(String(student.full_name || ""), 55, y);
+                doc.text(String(student.email || ""), 105, y);
+                doc.text(String(student.course || ""), 155, y);
+                
+                y += 8;
+            });
+            
+            doc.save("Student_Report.pdf");
+        }
+
+        function downloadExcel() {
+            const formattedData = studentData.map((student, index) => ({
+                "ID": index + 1,
+                "Student ID": student.student_id,
+                "Name": student.full_name,
+                "Email": student.email,
+                "Course": student.course
+            }));
+            const worksheet = XLSX.utils.json_to_sheet(formattedData);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Students");
+            XLSX.writeFile(workbook, "Student_Report.xlsx");
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = "login.html";
+        }
+
+        document.getElementById("username").innerText = localStorage.getItem("username") || "Admin";
+        loadStudents();
+    </script>
+</body>
+
+</html>
