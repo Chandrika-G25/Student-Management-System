@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marks Management | SMS ERP</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            SMS <span>ERP</span>
+        </div>
+        <ul>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="attendance.html">Attendance</a></li>
+            <li><a href="marks.html" class="active">Marks</a></li>
+            <li><a href="fees.html">Fees</a></li>
+            <li><a href="reports.html">Reports</a></li>
+        </ul>
+    </div>
+
+    <div class="main">
+        <div class="header">
+            <h2>Marks Management</h2>
+            <div style="display: flex; gap: 15px;">
+                <span id="username" style="font-weight: 600;"></span>
+                <button class="btn btn-danger" onclick="logout()" style="padding: 8px 15px;">Logout</button>
+            </div>
+        </div>
+
+        <div class="card" style="margin-bottom: 30px;">
+            <h3>Add Examination Marks</h3>
+            <form id="marksForm" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; align-items: end; margin-top: 15px;">
+                
+                <div class="input-field" style="margin-bottom: 0;">
+                    <label>Student</label>
+                    <select id="student_id" required style="width: 100%; padding: 12px; border-radius: 12px; border: 2px solid #f1f5f9; cursor: pointer;">
+                        <option value="">-- Choose Student --</option>
+                    </select>
+                </div>
+
+                <div class="input-field" style="margin-bottom: 0;">
+                    <label>Examination</label>
+                    <input type="text" id="exam_name" placeholder="e.g. Mid-term" required>
+                </div>
+
+                <div class="input-field" style="margin-bottom: 0;">
+                    <label>Subject</label>
+                    <input type="text" id="subject" placeholder="e.g. Mathematics" required>
+                </div>
+
+                <div class="input-field" style="margin-bottom: 0;">
+                    <label>Obtained</label>
+                    <input type="number" id="marks_obtained" placeholder="Marks" required>
+                </div>
+
+                <div class="input-field" style="margin-bottom: 0;">
+                    <label>Total</label>
+                    <input type="number" id="total_marks" value="100" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="height: 48px; justify-content: center;">
+                    Save Marks
+                </button>
+            </form>
+        </div>
+
+        <div class="table-container">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3>Academic Performance Records</h3>
+                <button class="btn btn-primary" style="padding: 8px 15px; background: var(--secondary);" onclick="loadMarks()">Refresh</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Roll No</th>
+                        <th>Student Name</th>
+                        <th>Examination</th>
+                        <th>Subject</th>
+                        <th>Score</th>
+                        <th>Percentage</th>
+                    </tr>
+                </thead>
+                <tbody id="marksTable">
+                    <!-- Data will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="marks.js"></script>
+    <script>
+        document.getElementById("username").innerText = localStorage.getItem("username") || "Admin";
+        
+        function logout() {
+            localStorage.clear();
+            window.location.href = "login.html";
+        }
+    </script>
+</body>
+
+</html>

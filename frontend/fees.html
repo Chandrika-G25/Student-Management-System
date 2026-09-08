@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fees Management | SMS ERP</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            SMS <span>ERP</span>
+        </div>
+        <ul>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="attendance.html">Attendance</a></li>
+            <li><a href="marks.html">Marks</a></li>
+            <li><a href="fees.html" class="active">Fees</a></li>
+            <li><a href="reports.html">Reports</a></li>
+        </ul>
+    </div>
+
+    <div class="main">
+        <div class="header">
+            <h2>Fees Management</h2>
+            <div style="display: flex; gap: 15px;">
+                <span id="username" style="font-weight: 600;"></span>
+                <button class="btn btn-danger" onclick="logout()" style="padding: 8px 15px;">Logout</button>
+            </div>
+        </div>
+
+        <div class="card" style="margin-bottom: 30px;">
+            <h3>Record New Payment</h3>
+            <form id="feeForm" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; align-items: end; margin-top: 15px;">
+                
+                <div class="input-field" style="margin-bottom: 0;">
+                    <label>Student</label>
+                    <select id="student_id" required style="width: 100%; padding: 12px; border-radius: 12px; border: 2px solid #f1f5f9; cursor: pointer;">
+                        <option value="">-- Choose Student --</option>
+                    </select>
+                </div>
+
+                <div class="input-field" style="margin-bottom: 0;">
+                    <label>Total Fee</label>
+                    <input type="number" id="total_fee" placeholder="Total Payable" required>
+                </div>
+
+                <div class="input-field" style="margin-bottom: 0;">
+                    <label>Amount Paid</label>
+                    <input type="number" id="paid_amount" placeholder="Current Payment" required>
+                </div>
+
+                <div class="input-field" style="margin-bottom: 0;">
+                    <label>Method</label>
+                    <select id="payment_method" required style="width: 100%; padding: 12px; border-radius: 12px; border: 2px solid #f1f5f9;">
+                        <option value="Cash">Cash</option>
+                        <option value="Online">Online / UPI</option>
+                        <option value="Bank Transfer">Bank Transfer</option>
+                        <option value="Cheque">Cheque</option>
+                    </select>
+                </div>
+
+                <div class="input-field" style="margin-bottom: 0;">
+                    <label>Payment Date</label>
+                    <input type="date" id="payment_date" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="height: 48px; justify-content: center;">
+                    Submit Payment
+                </button>
+            </form>
+        </div>
+
+        <div class="table-container">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3>Payment History & Dues</h3>
+                <button class="btn btn-primary" style="padding: 8px 15px; background: var(--secondary);" onclick="loadFees()">Refresh</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Roll No</th>
+                        <th>Student Name</th>
+                        <th>Total Fee</th>
+                        <th>Paid</th>
+                        <th>Balance</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody id="feesTable">
+                    <!-- Data will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="fees.js"></script>
+    <script>
+        document.getElementById("username").innerText = localStorage.getItem("username") || "Admin";
+        
+        function logout() {
+            localStorage.clear();
+            window.location.href = "login.html";
+        }
+    </script>
+</body>
+
+</html>
