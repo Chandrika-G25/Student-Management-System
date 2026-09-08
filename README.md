@@ -79,4 +79,4 @@ The project is prepared for deployment on modern cloud platforms:
 - **Vercel**: Using serverless functions (configured via `vercel.json`).
 - **Heroku**: Fully compatible with `Procfile` and Gunicorn.
 
-#   S t u d e n t - M a n a g e m e n t - S y s t e m  
+#   S t u d e n t - M a n a g e m e n t - S y s t e m  "# Student-Management-System" 
