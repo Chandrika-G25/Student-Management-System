@@ -1,4 +1,4 @@
-# 🚀 Complete Deployment Guide: Student Management System
+# Complete Deployment Guide: Student Management System
 
 This guide walks you through deploying your **Student Management System** to **Render** (free Python Web Service) connected to **TiDB Cloud Serverless** (free MySQL-compatible database).
 
@@ -105,13 +105,3 @@ git push -u origin main
 5. You're live! You can now manage students, track attendance, add marks, and log fee payments directly from the web.
 
 ---
-
-## ❓ Frequently Asked Questions & Troubleshooting
-
-### Why is the initial page load slow on Render Free Tier?
-Render's free tier spins down inactive instances after 15 minutes of inactivity. When a new visitor arrives, it takes around 30–50 seconds to "wake up". Subsequent requests will be fast.
-
-### Can I use Aiven MySQL or Railway instead of TiDB Cloud?
-**Yes!** The application supports any MySQL provider:
-- **Aiven**: Set `DB_HOST`, `DB_PORT` (typically 10000+), `DB_USER` (`avnadmin`), `DB_PASSWORD`, `DB_NAME` (`defaultdb`), and `DB_SSL=true`.
-- **Railway**: You can also use `DATABASE_URL` or `MYSQL_URL` as a single connection string variable.
