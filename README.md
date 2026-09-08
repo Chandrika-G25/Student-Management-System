@@ -1,4 +1,5 @@
 => SMS  - Student Management System
+Live project :https://student-management-system-1-3dja.onrender.com/
 _____________________________________________________________________________________________________________________________________________________________________
 
 A professional, full-stack Academic Resource Planning (ERP) system designed for educational institutions. This platform streamlines student management, attendance tracking, academic performance monitoring, and fee management through a modern, glassmorphism-inspired interface.
@@ -71,12 +72,3 @@ python backend/app.py
 ```
 Visit `http://127.0.0.1:5000` in your browser.
 
- Deployment
-_________________________________________________________________________________________________________________________________________________________________________________
-The project is prepared for deployment on modern cloud platforms:
-- **Render + Free Cloud MySQL (TiDB / Aiven)**: Complete step-by-step instructions available in [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md).
-- **PythonAnywhere**: Recommended for integrated MySQL hosting.
-- **Vercel**: Using serverless functions (configured via `vercel.json`).
-- **Heroku**: Fully compatible with `Procfile` and Gunicorn.
-
-#   S t u d e n t - M a n a g e m e n t - S y s t e m  "# Student-Management-System" 
